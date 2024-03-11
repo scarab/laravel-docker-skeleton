@@ -1,0 +1,34 @@
+version: '3'
+
+env:
+  ENV: '{{.ENV | default "dev"}}'
+  WEB_PORT_HTTP: 80
+  WEB_PORT_SSL: 443
+  XDEBUG_CONFIG: "main"
+  MYSQL_VERSION: "8.1"
+  INNODB_USE_NATIVE_AIO: 1
+  SQL_MODE: "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
+  HOST_UID:
+    sh: id -u
+  HOST_GID:
+    sh: id -g
+
+vars:
+  DOCKER_COMPOSE_COMMAND: docker compose -f docker-compose.yml
+
+dotenv: ['.env', '.env.{{.ENV}}']
+
+tasks:
+  build:
+    cmd: "{{.DOCKER_COMPOSE_COMMAND}} build"
+    requires:
+      vars: [ENV]
+  up:
+    cmd: "{{.DOCKER_COMPOSE_COMMAND}} up -d"
+  down:
+    cmd: "{{.DOCKER_COMPOSE_COMMAND}} down"
+  ssh:
+    cmd: "{{.DOCKER_COMPOSE_COMMAND}} exec web bash"
+  ssh-nginx:
+    cmd: "{{.DOCKER_COMPOSE_COMMAND}} exec nginx bash"
+

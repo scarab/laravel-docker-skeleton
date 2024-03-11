@@ -1,0 +1,119 @@
+{
+    "name": "scarab/laravel-docker-skeleton",
+    "type": "project",
+    "description": "Docker laravel environment",
+    "keywords": [
+        "Docker",
+        "Nginx",
+        "Php",
+        "Laravel",
+        "Supervisord",
+        "MySQL"
+    ],
+    "authors": [
+        {
+            "name": "Ilya 'Scarab' Basalaev",
+            "email": "scarab@scarab.name",
+            "role": "Developer"
+        },
+        {
+            "name": "Dmitriy Kravtsov",
+            "email": "dmitriy.kravtsov@systemsdk.com",
+            "homepage": "https://github.com/dimadeush",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "laravel/framework": "^10.0"
+    },
+    "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.8",
+        "barryvdh/laravel-ide-helper": "^2.13",
+        "fakerphp/faker": "^1.9",
+        "laravel/pint": "^1.0",
+        "mockery/mockery": "^1.4",
+        "neronmoon/scriptsdev": "^0.1",
+        "nunomaduro/collision": "^7.0",
+        "spatie/laravel-ignition": "^2.0",
+        "phpunit/phpunit": "^10.4",
+        "roave/security-advisories": "dev-latest"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/",
+            "PHPUnit\\": "tools/01_phpunit/vendor/phpunit/phpunit/src",
+            "PHPMD\\": "tools/06_phpmd/vendor/phpmd/phpmd/src/bin",
+            "PhpCsFixer\\": "tools/03_ecs/vendor/symplify/easy-coding-standard/vendor/friendsofphp/php-cs-fixer/src",
+            "Symplify\\CodingStandard\\": "tools/03_ecs/vendor/symplify/easy-coding-standard/vendor/symplify/coding-standard/src",
+            "Symplify\\EasyCodingStandard\\": "tools/03_ecs/vendor/symplify/easy-coding-standard/src",
+            "ECSPrefix20210928\\Symplify\\RuleDocGenerator\\": "tools/03_ecs/vendor/symplify/easy-coding-standard/vendor/symplify/rule-doc-generator-contracts/src",
+            "Rector\\": "tools/08_rector/vendor/rector"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "if test -d vendor/bamarni/composer-bin-plugin; then composer bin all install; fi;"
+        ],
+        "pre-autoload-dump": [
+            "if test ! -f artisan; then @composer create-project laravel/laravel ${COMPOSE_PROJECT_NAME}"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "pwd; ls -l",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "if test -d vendor/bamarni/composer-bin-plugin; then composer bin all update; fi",
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+            ]
+        },
+        "bamarni-bin": {
+            "bin-links": true,
+            "forward-command": true,
+            "target-directory": "tools"
+        },
+        "scripts-dev": {
+            "post-update-cmd": [
+                "php artisan ide-helper:generate",
+                "php artisan ide-helper:meta"
+            ]
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "allow-plugins": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
